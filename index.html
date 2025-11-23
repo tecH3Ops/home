@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tech3Ops Consultancy — Innovate. Build. Deliver.</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #f1f4f9;
+    --card: rgba(255,255,255,0.95);
+    --text: #112;
+    --muted: #556;
+    --accent: #00c6ff;
+    --accent-2: #00ffa3;
+    --glass: rgba(255,255,255,0.6);
+    --nav-bg: rgba(13,27,42,0.9);
+  }
+  [data-theme="dark"]{
+    --bg: #0b0f14;
+    --card: rgba(13,20,28,0.85);
+    --text: #e8eef6;
+    --muted: #9aa6b3;
+    --accent: #00e5ff;
+    --accent-2: #36ffb6;
+    --glass: rgba(255,255,255,0.03);
+    --nav-bg: rgba(1,6,12,0.6);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:"Poppins",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased;
+    scroll-behavior:smooth;
+  }
+
+  /* ---------- Loader ---------- */
+  #loader {
+    position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.15));
+    z-index:2100; transition:opacity .4s ease, visibility .4s ease;
+  }
+  #loader.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  .spinner{
+    width:92px; height:92px; border-radius:14px; background:linear-gradient(135deg,var(--card), rgba(255,255,255,0.85));
+    box-shadow: 0 15px 40px rgba(2,6,23,0.25), inset 0 -8px 30px rgba(0,0,0,0.06);
+    display:flex; align-items:center; justify-content:center;
+    transform: translateY(-6px);
+  }
+  .spinner .dot{
+    width:24px;height:24px;border-radius:50%; background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    animation: pop 1s infinite;
+  }
+  @keyframes pop{0%{transform:scale(.9)}50%{transform:scale(1.18)}100%{transform:scale(.9)}}
+
+  /* ---------- Header ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; height:66px; display:flex; align-items:center;
+    justify-content:space-between; padding:12px 40px; z-index:1000;
+    background:var(--nav-bg); backdrop-filter:blur(8px);
+    box-shadow:0 6px 30px rgba(2,12,30,0.12);
+  }
+  .brand{ display:flex; align-items:center; gap:14px; }
+  /* .logo {
+    width:44px;height:44px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:flex;align-items:center;justify-content:center;color:white;font-weight:700;
+    font-size:18px; box-shadow:0 6px 18px rgba(2,12,30,0.18);
+  }*/
+.logo { width:44px;height:44px;border-radius:10px; display:flex; align-items:center; justify-content:center; }
+  header h1{ font-size:18px; font-weight:600; color:var(--card); margin:0;}
+  nav{ display:flex; align-items:center; gap:18px; }
+  nav a{
+    color:rgba(230,230,230,.95); text-decoration:none; font-weight:600; padding:6px 8px;
+    border-radius:8px; transition: all .22s;
+  }
+  nav a.active, nav a:hover {
+    color:#001e2a; background: linear-gradient(90deg,var(--accent),var(--accent-2));
+    box-shadow: 0 6px 18px rgba(0,198,255,0.12);
+  }
+
+  /* ---------- Dark toggle ---------- */
+  .controls{ display:flex; gap:12px; align-items:center; }
+  .toggle{
+    width:46px; height:28px; background:var(--glass); border-radius:20px; padding:4px;
+    display:flex; align-items:center; cursor:pointer; gap:6px;
+  }
+  .toggle .knob{
+    width:20px; height:20px; border-radius:50%; background:var(--card); transition:transform .25s;
+  }
+  [data-theme="dark"] .toggle .knob{ transform: translateX(18px); background:linear-gradient(90deg,var(--accent),var(--accent-2)); }
+
+  /* ---------- Floating decor ---------- */
+  .float-shape{
+    position:fixed; border-radius:50%; opacity:.12; filter:blur(12px); z-index:0;
+    animation: floaty 10s ease-in-out infinite;
+    pointer-events:none;
+  }
+  .shape-a{ width:260px; height:260px; background:linear-gradient(180deg,var(--accent),transparent); right:-60px; top:30%; transform:translateY(-20%); animation-duration:14s;}
+  .shape-b{ width:200px; height:200px; background:linear-gradient(180deg,var(--accent-2),transparent); left:-40px; top:10%; animation-duration:13s; }
+  @keyframes floaty { 0%{transform:translateY(0)}50%{transform:translateY(18px)}100%{transform:translateY(0)} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    height:92vh; display:flex; align-items:center; justify-content:center; text-align:center;
+    padding:0 24px; margin-top:66px; border-bottom-left-radius:20px; border-bottom-right-radius:20px;
+    color:white; position:relative; overflow:hidden;
+    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+      url('C:/Users/kakar/Downloads/tech3ops_home.jpg') center/cover no-repeat;
+  }
+  .hero h2{ font-size:48px; line-height:1.02; margin-bottom:12px; text-shadow:0 10px 30px rgba(2,6,23,0.45)}
+  .hero p{ font-size:18px; max-width:920px; margin:auto; opacity:.95; }
+
+  .cta-row{ margin-top:22px; display:flex; gap:12px; justify-content:center; }
+  .btn-hero{ padding:12px 18px; border-radius:10px; font-weight:600; border:none; cursor:pointer; }
+  .btn-primary-hero{ background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#012; box-shadow:0 8px 30px rgba(0,198,255,0.12) }
+  .btn-secondary-hero{ background:transparent; border:2px solid rgba(255,255,255,0.12); color:#fff }
+
+  /* ---------- Sections ---------- */
+  .section{ padding:84px 40px; position:relative; z-index:2; }
+  .section .lead { text-align:center; max-width:920px; margin:0 auto 34px; color:var(--muted); font-size:16px; }
+
+  .section h2{ font-size:30px; margin-bottom:18px; color:var(--text); text-align:center; }
+
+  /* ---------- Grid / Cards ---------- */
+  .grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:22px; max-width:1100px; margin:30px auto 0; }
+
+  .card {
+    position:relative; overflow:visible; border-radius:14px; padding:22px; background:var(--card);
+    box-shadow: 0 10px 30px rgba(2,8,30,0.08); transition: transform .35s cubic-bezier(.2,.9,.3,1), box-shadow .35s;
+    transform-style: preserve-3d;
+    cursor:pointer;
+  }
+  .card .title{ font-weight:700; margin-bottom:8px; color:var(--text); font-size:18px; }
+  .card .meta{ font-size:13px; color:var(--muted); margin-bottom:12px; }
+  .card p{ display:none; color:var(--muted); line-height:1.6; }
+  .card.open p{ display:block; margin-top:6px; }
+
+  /* small accent ribbon */
+  .ribbon{ position:absolute; right:12px; top:12px; background:linear-gradient(90deg,var(--accent),var(--accent-2));
+          color:#012; padding:6px 10px; border-radius:8px; font-weight:700; font-size:12px; box-shadow:0 8px 20px rgba(0,198,255,0.08);}
+
+  /* 3D hover glow */
+  .card::after{
+    content:""; position:absolute; left:-30%; top:-40%; width:160%; height:160%; background:radial-gradient(circle at 10% 10%, rgba(0,198,255,0.06), transparent 12%);
+    pointer-events:none; transition:opacity .3s;
+  }
+
+  /* Contact form styles */
+  .contact-area{ max-width:1100px; margin:18px auto 0; display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  .form-field{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+  input, textarea, select {
+    padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08);
+    background:transparent; color:var(--text); outline:none;
+  }
+  input::placeholder, textarea::placeholder{ color:var(--muted); }
+  .btn-row{ display:flex; gap:12px; margin-top:12px; }
+
+  /* ---------- Floating WhatsApp ---------- */
+  .whatsapp-float {
+    position:fixed; right:18px; bottom:18px; z-index:1200;
+  }
+  .whatsapp-float a{
+    display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:999px;
+    background:linear-gradient(90deg,#25D366,#128C7E); color:white; text-decoration:none;
+    box-shadow:0 10px 30px rgba(2,8,30,0.18); font-weight:700;
+  }
+
+  /* ---------- Footer ---------- */
+  footer{ padding:18px; text-align:center; color:var(--muted); margin-top:40px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    .contact-area{ grid-template-columns: 1fr; }
+    header{ padding:14px 20px; }
+    .hero h2{ font-size:34px; }
+    .hero{ height:72vh; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader" role="status" aria-hidden="false">
+    <div class="spinner" aria-hidden="true"><div class="dot"></div></div>
+  </div>
+
+  <!-- Floating shapes -->
+  <div class="float-shape shape-a" aria-hidden="true"></div>
+  <div class="float-shape shape-b" aria-hidden="true"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="logo" ><img src="C:/Users/kakar/Downloads/logo1.png" alt="Tech3Ops Logo" style="width:44px;height:44px;border-radius:10px"></div>
+      <div>
+        <div style="font-size:14px;color:var(--glass)">Tech3Ops</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">Consultancy & DevOps</div>
+      </div>
+    </div>
+
+    <nav role="navigation" aria-label="Main Navigation">
+      <a href="#services">Services</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="controls">
+      <div class="toggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle dark mode">
+        <div class="knob"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div>
+      <h2 id="hero-title">Technology, Operations &amp; the Power of 3</h2>
+      <p>Helping businesses build scalable, secure and efficient IT systems with expert consulting and real project execution.</p>
+      <div class="cta-row" style="margin-top:22px">
+        <button class="btn-hero btn-primary-hero" onclick="document.querySelector('#contact').scrollIntoView({behavior:'smooth'})">Talk to Sales</button>
+        <button class="btn-hero btn-secondary-hero" onclick="document.querySelector('#projects').scrollIntoView({behavior:'smooth'})">View Projects</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="section" aria-labelledby="about-title">
+    <h2 id="about-title">About Tech3Ops</h2>
+    <p style="max-width:900px;margin:auto;text-align:center;font-size:18px;line-height:1.7;color:#0d1b2a;">
+        Tech3Ops Consultancy powers your business with smarter IT. We streamline IT operations, optimize cloud & networks, and implement automation for secure, scalable growth. 
+        Our 10-member expert team delivers end-to-end software and operations solutions for startups, SMEs, and enterprises. 
+        We turn technology into a growth engine, not a bottleneck. Modern, reliable, and efficient – we make IT work <strong>for your success</strong>.
+    </p>
+    <div class="grid" aria-hidden="true">
+      <div style="padding:18px; border-radius:12px; background:var(--card); box-shadow:0 12px 30px rgba(2,6,23,0.06)">
+        <strong>Team</strong><div style="color:var(--muted); margin-top:6px">10 Engineers — Backend, DevOps & ML</div>
+      </div>
+      <div style="padding:18px; border-radius:12px; background:var(--card); box-shadow:0 12px 30px rgba(2,6,23,0.06)">
+        <strong>Focus</strong><div style="color:var(--muted); margin-top:6px">Java, Spring Boot, React Native, AWS, Python</div>
+      </div>
+      <div style="padding:18px; border-radius:12px; background:var(--card); box-shadow:0 12px 30px rgba(2,6,23,0.06)">
+        <strong>Delivery</strong><div style="color:var(--muted); margin-top:6px">Zero-cost open-source tooling, transparent sprints</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="section" aria-labelledby="services-title">
+    <h2 id="services-title">Our Core Services</h2>
+    <p class="lead">We deliver full-cycle engineering & operations — infra, cloud, security, automation and support.</p>
+
+    <div class="grid" id="servicesGrid">
+      <div class="card" data-card>
+        <div class="ribbon">Infra</div>
+        <div class="title">IT Infrastructure Setup & Management</div>
+        <div class="meta">Servers, networking, DB & monitoring</div>
+        <p>Complete setup and optimization of servers, networks and database clusters with proactive monitoring and runbooks for uptime.</p>
+      </div>
+
+      <div class="card" data-card>
+        <div class="ribbon">Cloud</div>
+        <div class="title">Cloud & Network Operations (AWS)</div>
+        <div class="meta">EC2, S3, RDS, VPC, IAM</div>
+        <p>Architecting resilient AWS deployments, CI/CD pipelines and cost optimizations—plus serverless options when needed.</p>
+      </div>
+
+      <div class="card" data-card>
+        <div class="ribbon">Support</div>
+        <div class="title">Technical Support & Troubleshooting</div>
+        <div class="meta">Incidents & performance</div>
+        <p>24/7 incident support, root-cause analysis, performance tuning and observability integration (logs/metrics/traces).</p>
+      </div>
+
+      <div class="card" data-card>
+        <div class="ribbon">Auto</div>
+        <div class="title">Process Automation & Optimization</div>
+        <div class="meta">CI/CD, scripts, workflows</div>
+        <p>Automation of repetitive tasks, release pipelines, infra-as-code and operational runbooks to reduce toil and errors.</p>
+      </div>
+
+      <div class="card" data-card>
+        <div class="ribbon">Sec</div>
+        <div class="title">IT Security & Performance Monitoring</div>
+        <div class="meta">Vulnerability checks & alerts</div>
+        <p>Security assessments, monitoring, alerting and policy hardening to reduce attack surface and downtime risk.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section" aria-labelledby="projects-title">
+    <h2 id="projects-title">Projects & Products</h2>
+    <p class="lead">Selected real projects built and supported by Tech3Ops engineers.</p>
+
+    <div class="grid" id="projectsGrid">
+      <div class="card" data-card>
+        <div class="ribbon">AI</div>
+        <div class="title">eNtiDi — AI Dish Scanner</div>
+        <div class="meta">React Native • Flask • Spring Boot</div>
+        <p>Mobile app that identifies dishes via image, provides cultural context, and suggests recipes/nearby restaurants.</p>
+      </div>
+
+      <div class="card" data-card>
+        <div class="ribbon">HMS</div>
+        <div class="title">Hospital Management System</div>
+        <div class="meta">Java • PostgreSQL</div>
+        <p>Full hospital system: patients, appointments, billing, and staff dashboards with secure roles and audit logs.</p>
+      </div>
+
+      <div class="card" data-card>
+        <div class="ribbon">Ecom</div>
+        <div class="title">eCommerce Checkout System</div>
+        <div class="meta">PHP • QR Payments</div>
+        <p>Robust checkout flow with JSON cart storage, admin dashboards and QR-based payment integration.</p>
+      </div>
+
+      <div class="card" data-card>
+        <div class="ribbon">Book</div>
+        <div class="title">Spring Boot Bookstore</div>
+        <div class="meta">Spring Boot • JWT</div>
+        <p>JWT-secured bookstore with inventories, filters, search and role-based access control.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section" aria-labelledby="contact-title">
+    <h2 id="contact-title">Contact & Enquiries</h2>
+    <p class="lead">Talk to our sales or engineering team — we typically respond within 1 business day.</p>
+
+    <div class="contact-area">
+      <form id="contactForm" class="card" aria-label="Contact form">
+        <div class="form-field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" placeholder="Your full name" required>
+        </div>
+
+        <div class="form-field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@company.com" required>
+        </div>
+
+        <div class="form-field">
+          <label for="company">Company</label>
+          <input id="company" name="company" placeholder="Optional">
+        </div>
+
+        <div class="form-field" style="grid-column:1/-1">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell us about your project..." required></textarea>
+        </div>
+
+        <div class="btn-row" style="grid-column:1/-1">
+          <button class="btn-primary-hero btn-primary" type="submit">Send Message</button>
+          <button type="button" class="btn-ghost" onclick="alert('Schedule call demo')">Schedule Call</button>
+        </div>
+
+        <div id="formMsg" style="color:green;font-weight:700;margin-top:12px;display:none">Message submitted (demo)</div>
+      </form>
+
+      <aside class="card" aria-label="Contact details">
+        <h3 style="margin:0 0 8px 0">Office</h3>
+        <div style="color:var(--muted)">Tech3Ops Consultancy — Andhra Pradesh, India</div>
+        <div style="margin-top:14px"><strong>Email</strong><div style="color:var(--muted)">tech3ops.consultancy@gmail.com</div></div>
+
+        <hr style="margin:14px 0;border:none;border-top:1px solid rgba(0,0,0,0.06)">
+
+        <strong>Follow</strong>
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <a href="https://www.linkedin.com/company/tech3ops-consultancy" style="color:var(--muted)">LinkedIn</a>
+          <a href="https://github.com/tecH3Ops" style="color:var(--muted)">GitHub</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Floating WhatsApp 
+  <div class="whatsapp-float" aria-hidden="true">
+    <a href="#" target="_blank" rel="noopener noreferrer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="opacity:0.98">
+        <path d="M20.52 3.48A11.9 11.9 0 0012 0C5.37 0 .05 5.32.05 11.95 0 14.67.77 17.25 2.18 19.37L0 24l4.78-2.14A11.95 11.95 0 0012 24c6.63 0 12-5.37 12-12 0-3.21-1.25-6.18-3.48-8.52z" fill="#fff" opacity="0.06"/>
+        <path d="M17.472 14.382c-.297-.148-1.758-.867-2.03-.966-.273-.099-.472-.148-.672.148-.197.297-.768.966-.942 1.165-.173.198-.347.223-.644.075-.297-.148-1.255-.462-2.39-1.476-.884-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.148-.174.198-.298.297-.497.099-.198.05-.372-.025-.52-.075-.148-.672-1.618-.922-2.218-.243-.582-.49-.503-.67-.513l-.57-.01c-.197 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.148.198 2.095 3.2 5.076 4.487 0 0 .25.107.45.16.198.053.397.08.565.05.197-.03 1.758-.719 2.006-1.415.247-.696.247-1.29.173-1.414-.074-.125-.27-.198-.568-.347z" fill="#fff"/>
+      </svg>
+      Chat with us
+    </a>
+  </div>-->
+
+<div class="email-float" aria-hidden="true" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #0d1b2a;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    z-index: 1000;
+">
+    <a href="mailto:contact@tech3ops.com" style="color:white; text-decoration:none; display:flex; align-items:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M2 4v16h20V4H2zm18 2v.511l-8 5.333-8-5.333V6h16zM4 18V8.467l8 5.333 8-5.333V18H4z" fill="white"/>
+        </svg>
+        Email Us
+    </a>
+</div>
+
+
+  <footer>
+    <small>© <span id="year"></span> Tech3Ops Consultancy — Innovate. Build. Deliver.</small>
+  </footer>
+
+<script>
+  // ---------- Loader hide ----------
+  window.addEventListener('load', () => {
+    setTimeout(()=> document.getElementById('loader').classList.add('hide'), 600);
+  });
+
+  // ---------- Theme toggle ----------
+  const root = document.documentElement;
+  const saved = localStorage.getItem('tech3ops_theme');
+  if(saved) root.setAttribute('data-theme', saved);
+  else root.setAttribute('data-theme', 'light');
+
+  const toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', () => {
+    const cur = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', cur);
+    localStorage.setItem('tech3ops_theme', cur);
+  });
+  toggle.addEventListener('keypress', e => { if(e.key === 'Enter') toggle.click() });
+
+  // ---------- Card tilt (3D) ----------
+  function enableTilt(containerSelector){
+    const cards = document.querySelectorAll(containerSelector + ' [data-card]');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', ({offsetX, offsetY, target}) => {
+        const width = card.clientWidth, height = card.clientHeight;
+        const x = (offsetX - width / 2) / width;
+        const y = (offsetY - height / 2) / height;
+        const rotateX = (y * 8).toFixed(2);
+        const rotateY = (x * -8).toFixed(2);
+        card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(6px)`;
+        card.style.boxShadow = `0 18px 40px rgba(2,8,30,0.12)`;
+        // subtle highlight
+        const after = card.querySelector('::after');
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+      });
+      // click to toggle reveal
+      card.addEventListener('click', e => {
+        // avoid toggling when clicking links / buttons inside
+        if(e.target.tagName.toLowerCase() === 'a' || e.target.closest('button')) return;
+        card.classList.toggle('open');
+      });
+    });
+  }
+  enableTilt('#servicesGrid');
+  enableTilt('#projectsGrid');
+
+  // ---------- Reveal on scroll & active nav ----------
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const id = entry.target.getAttribute('id');
+      if(entry.isIntersecting){
+        document.querySelector('nav a[href="#'+id+'"]').classList.add('active');
+        entry.target.classList.add('in');
+      } else {
+        document.querySelector('nav a[href="#'+id+'"]').classList.remove('active');
+        // keep in class if once revealed? optional: keep it
+      }
+    });
+  }, { root:null, threshold: 0.28 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // ---------- Year ----------
+  document.getElementById('year').innerText = new Date().getFullYear();
+
+  // ---------- Demo contact (local storage) ----------
+  document.getElementById('contactForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const data = {
+      name: this.name.value.trim(),
+      email: this.email.value.trim(),
+      company: this.company.value.trim(),
+      message: this.message.value.trim(),
+      ts: new Date().toISOString()
+    };
+    const arr = JSON.parse(localStorage.getItem('tech3ops_contacts') || '[]');
+    arr.push(data);
+    localStorage.setItem('tech3ops_contacts', JSON.stringify(arr));
+    document.getElementById('formMsg').style.display = 'block';
+    setTimeout(()=> document.getElementById('formMsg').style.display = 'none', 3000);
+    this.reset();
+  });
+
+  // Accessibility: skip loader with keyboard ESC
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') document.getElementById('loader').classList.add('hide') });
+
+  // Small enhancement: smooth scroll offset account for fixed header
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if(!el) return;
+      const y = el.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({top:y, behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
